@@ -1,4 +1,7 @@
 
+var keepGoing;
+
+
 
 
 function generateGamers(){
@@ -62,8 +65,7 @@ function calculateTheOdds(){
                   var traces = [];
                   var player1 = 0;
                   var computer1 = 0;
-                   var player2 = 0;
-                  var computer2 = 0;
+
                   helper_flag = false;
                   function Toss() {
                         if (Math.random() < 0.5) {
@@ -73,6 +75,7 @@ function calculateTheOdds(){
                         }
                   }
                   function CoinGame() {
+                        keepGoing = true;
                         document.getElementById("b3").disabled = true;
                         document.getElementById('coin').innerHTML = '';
                         console.trace()
@@ -96,43 +99,65 @@ function calculateTheOdds(){
                         }
 
                         var computer_choice = com_select_1 + com_select_2 + com_select_3;
+                        if (document.getElementById('radioSlow').checked){
+                        simulationSpeed = 500
+                        }else if (document.getElementById('radioFast').checked){
+                        simulationSpeed = 100
+                        }
+                        console.log(simulationSpeed)
+                        helper(0,user_choice,computer_choice, simulationSpeed)
 
-                        helper(0,user_choice,computer_choice)
 
                   }
-                  function helper(count, user_choice, computer_choice) {
-                        setTimeout(() => {
+                  function stopCoinGame(){
+                        keepGoing = false;
+                  }
+                  function helper(count, user_choice, computer_choice, simulationSpeed) {
+
+                         if (keepGoing){
+                         setTimeout(() => {
                               Toss()
                               document.getElementById('coin').innerHTML += traces[count];
                               count ++;
-                              if (count >= 3) {
-                                    var lastThreeTraces = traces[count - 3] + traces[count - 2] + traces[count - 1];
+                              if (count >= 4) {
+                                    var lastThreeTraces = traces[count - 4] + traces[count - 3] + traces[count - 2];
                                     if (user_choice == lastThreeTraces) {
                                           whoIsWinner = "Player has won! ";
-                                          winner = true;
                                           player1++;
                                           document.getElementById('winner').innerHTML = "The Winner is: " + whoIsWinner;
                                           document.getElementById('player').innerHTML = "Player Score: "+player1;
                                           document.getElementById('computer').innerHTML = "Computer Score: "+computer1;
                                           document.getElementById("b3").disabled = false;
-                                          return
+                                          count = 0;
+                                          document.getElementById('coin').innerHTML = "";
+                                          traces = [];
                                     }
 
                                     if (computer_choice == lastThreeTraces) {
                                           whoIsWinner = "Computer has won! ";
-                                          winner = true;
                                           computer1++;
                                           document.getElementById('winner').innerHTML = "The Winner is: " + whoIsWinner;
                                           document.getElementById('player').innerHTML = "Player Score: "+ player1;
                                           document.getElementById('computer').innerHTML = "Computer Score: " + computer1;
                                           document.getElementById("b3").disabled = false;
-                                          return
+                                          count = 0;
+                                          document.getElementById('coin').innerHTML = "";
+                                          traces = [];
                                     }
                               }
-                              helper(count,user_choice,computer_choice)
-                        }, 500);
+                              helper(count,user_choice,computer_choice,simulationSpeed)
+                        }, simulationSpeed);
+                        }
+                        var data = [
+                        {
+                        x: ['Player Wins', 'Computer Wins'],
+                        y: [player1, computer1],
+                        type: 'bar'
+                        }
+                        ];
 
+                        Plotly.newPlot('graph', data);
                   }
 
 
-
+//initGuidance(["input","button1","button2"])
