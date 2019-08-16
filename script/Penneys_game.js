@@ -156,7 +156,10 @@ function calculateTheOdds(){
                         }
                         ];
 
-                        Plotly.newPlot('graph', data);
+                        var layout = {
+                            title:'Game Result'
+                        };
+                        Plotly.newPlot('graph', data, layout);
                   }
 
 
