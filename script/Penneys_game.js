@@ -162,5 +162,3 @@ function calculateTheOdds(){
                         Plotly.newPlot('graph', data, layout);
                   }
 
-
-//initGuidance(["input","button1","button2"])
